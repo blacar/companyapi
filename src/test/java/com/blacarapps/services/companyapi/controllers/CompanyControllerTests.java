@@ -55,7 +55,7 @@ public final class CompanyControllerTests {
         //when
         this.mockFindOne(name);
         //then
-        mvc.perform(MockMvcRequestBuilders.get("/company")
+        mvc.perform(MockMvcRequestBuilders.get("/company/1")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(
@@ -66,8 +66,10 @@ public final class CompanyControllerTests {
     }
 
     private void mockFindOne(final String name) {
+        final Company company = this.mockCompany(name);
+        company.setId(1L);
         given(companies.findById(Mockito.anyLong()))
-            .willReturn(Optional.of(this.mockCompany(name)));
+            .willReturn(Optional.of(company));
     }
 
     private void mockFindAll(final String name) {
