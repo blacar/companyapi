@@ -7,5 +7,5 @@ jdk:
 after_success:
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
 - export IMAGE_NAME=blacarapps/companyapi
-- docker build -t $IMAGE_NAME:$COMMIT .
-- docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+- docker build -t $IMAGE_NAME .
+- docker tag $IMAGE_NAME $IMAGE_NAME:$TAG
