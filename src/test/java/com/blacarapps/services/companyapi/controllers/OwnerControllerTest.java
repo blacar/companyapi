@@ -1,7 +1,6 @@
 package com.blacarapps.services.companyapi.controllers;
 
-import com.blacarapps.services.companyapi.entities.Company;
-import com.blacarapps.services.companyapi.repositories.CompanyRepository;
+import com.blacarapps.services.companyapi.entities.Owner;
 import com.blacarapps.services.companyapi.repositories.OwnerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -23,14 +22,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(CompanyController.class)
-public final class CompanyControllerTests {
+@WebMvcTest(OwnerController.class)
+public final class OwnerControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
-    @MockBean
-    private CompanyRepository companies;
 
     @MockBean
     private OwnerRepository owners;
@@ -38,36 +34,36 @@ public final class CompanyControllerTests {
     @Test
     public void whenSaveThenReturnJson() throws Exception {
         // given
-        final String name = "Company1";
-        final Company company = this.mockCompany(name);
+        final String name = "owner1";
+        final Owner owner = this.mockOwner(name);
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson=ow.writeValueAsString(company);
+        String requestJson=ow.writeValueAsString(owner);
         //when
-        this.mockSave(company);
+        this.mockSave(owner);
         //then
         mvc.perform(
-            MockMvcRequestBuilders.post("/company")
+            MockMvcRequestBuilders.post("/owner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson)
         )
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(
-            MockMvcResultMatchers.jsonPath(
-                "$.name", Matchers.is(name)
-            )
-        );
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "$.name", Matchers.is(name)
+                )
+            );
     }
 
     @Test
     public void whenGetAllThenReturnJsonArray() throws Exception {
         // given
-        final String name = "Company1";
+        final String name = "owner1";
         //when
         this.mockFindAll(name);
         //then
-        mvc.perform(MockMvcRequestBuilders.get("/company")
+        mvc.perform(MockMvcRequestBuilders.get("/owner")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(
@@ -83,11 +79,11 @@ public final class CompanyControllerTests {
     @Test
     public void whenGetOneThenReturnJson() throws Exception {
         // given
-        final String name = "Company1";
+        final String name = "owner1";
         //when
         this.mockFindOne(name);
         //then
-        mvc.perform(MockMvcRequestBuilders.get("/company/1")
+        mvc.perform(MockMvcRequestBuilders.get("/owner/1")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(
@@ -98,25 +94,23 @@ public final class CompanyControllerTests {
     }
 
     private void mockFindOne(final String name) {
-        final Company company = this.mockCompany(name);
-        company.setId(1L);
-        given(companies.findById(Mockito.anyLong()))
-            .willReturn(Optional.of(company));
+        final Owner owner = this.mockOwner(name);
+        owner.setId(1L);
+        given(owners.findById(Mockito.anyLong()))
+            .willReturn(Optional.of(owner));
     }
 
-    private void mockSave(final Company company) {
-        given(companies.save(Mockito.any(Company.class)))
-            .willReturn(company);
+    private void mockSave(final Owner owner) {
+        given(owners.save(Mockito.any(Owner.class)))
+            .willReturn(owner);
     }
 
     private void mockFindAll(final String name) {
-        given(companies.findAll())
-            .willReturn(Arrays.asList(this.mockCompany(name)));
+        given(owners.findAll())
+            .willReturn(Arrays.asList(this.mockOwner(name)));
     }
 
-    private Company mockCompany(final String name) {
-        return new Company(
-            name, "Madrid", "Spain", "company@test.com", "0034567567"
-        );
+    private Owner mockOwner(final String name) {
+        return new Owner(name);
     }
 }

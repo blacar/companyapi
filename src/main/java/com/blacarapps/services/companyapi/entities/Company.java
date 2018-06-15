@@ -3,18 +3,25 @@ package com.blacarapps.services.companyapi.entities;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
+/**
+ * Company Entity
+ * @a
+ */
 @Entity
 public final class Company implements Serializable {
+
+    private static final long serialVersionUID = 346676342697864281L;
 
     private Long id;
 
@@ -30,18 +37,21 @@ public final class Company implements Serializable {
 
     private Set<Owner> owners = new HashSet<>(0);
 
+    public Company() {
+    }
+
     public Company(
-        final String name,
-        final String city,
-        final String country,
-        final String mail,
-        final String phone
+        final String nameparam,
+        final String cityparam,
+        final String countryparam,
+        final String mailparam,
+        final String phoneparam
     ) {
-        this.name = name;
-        this.city = city;
-        this.country = country;
-        this.mail = mail;
-        this.phone = phone;
+        this.name = nameparam;
+        this.city = cityparam;
+        this.country = countryparam;
+        this.mail = mailparam;
+        this.phone = phoneparam;
     }
 
     @Id
@@ -50,8 +60,8 @@ public final class Company implements Serializable {
         return id;
     }
 
-    public void setId(final Long id) {
-        this.id = id;
+    public void setId(final Long idparam) {
+        this.id = idparam;
     }
 
     @NotBlank
@@ -59,8 +69,8 @@ public final class Company implements Serializable {
         return name;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setName(final String nameparam) {
+        this.name = nameparam;
     }
 
     @NotBlank
@@ -68,8 +78,8 @@ public final class Company implements Serializable {
         return city;
     }
 
-    public void setCity(final String city) {
-        this.city = city;
+    public void setCity(final String cityparam) {
+        this.city = cityparam;
     }
 
     @NotBlank
@@ -77,8 +87,8 @@ public final class Company implements Serializable {
         return country;
     }
 
-    public void setCountry(final String country) {
-        this.country = country;
+    public void setCountry(final String countryparam) {
+        this.country = countryparam;
     }
 
     @Email
@@ -86,26 +96,28 @@ public final class Company implements Serializable {
         return mail;
     }
 
-    public void setMail(final String mail) {
-        this.mail = mail;
+    public void setMail(final String mailparam) {
+        this.mail = mailparam;
     }
 
-    @NotBlank
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(final String phone) {
-        this.phone = phone;
+    public void setPhone(final String phoneparam) {
+        this.phone = phoneparam;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    @OneToMany(
+        fetch = FetchType.EAGER, cascade = CascadeType.ALL
+    )
+    @JoinColumn(referencedColumnName = "id", name = "company_id")
     public Set<Owner> getOwners() {
         return owners;
     }
 
-    public void setOwners(final Set<Owner> owners) {
-        this.owners = owners;
+    public void setOwners(final Set<Owner> ownersparam) {
+        this.owners = ownersparam;
     }
 
     public Company update(final Company company) {

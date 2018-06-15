@@ -4,27 +4,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends RuntimeException {
+public final class ResourceNotFoundException extends RuntimeException {
     private String resource;
     private String field;
     private Object value;
 
     public ResourceNotFoundException(
-        final String resource,
-        final String field,
-        final Object value
+        final String resourceparam,
+        final String fieldparam,
+        final Object valueparam
     ) {
         super(
             String.format(
                 "%s not found with %s : '%s'",
-                resource,
-                field,
-                value
+                resourceparam,
+                fieldparam,
+                valueparam
             )
         );
-        this.resource = resource;
-        this.field = field;
-        this.value = value;
+        this.resource = resourceparam;
+        this.field = fieldparam;
+        this.value = valueparam;
     }
 
     public String getResource() {

@@ -71,5 +71,4 @@ public class CompanyRepositoryTests {
         // then
         Assert.assertTrue(found.getName().equals(name));
     }
-
 }

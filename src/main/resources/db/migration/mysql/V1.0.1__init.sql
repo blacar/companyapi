@@ -11,6 +11,8 @@ CREATE TABLE COMPANY (
 CREATE TABLE OWNER (
   id BIGINT NOT NULL AUTO_INCREMENT,
   name varchar(255) NOT NULL,
-  company BIGINT,
-  PRIMARY KEY (id)
+  company_id BIGINT,
+  PRIMARY KEY (id),
+  CONSTRAINT owner_company_fk FOREIGN KEY (company_id)
+  REFERENCES COMPANY (id)
 );

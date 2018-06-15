@@ -1,8 +1,10 @@
 package com.blacarapps.services.companyapi.controllers;
 
 import com.blacarapps.services.companyapi.entities.Company;
+import com.blacarapps.services.companyapi.entities.Owner;
 import com.blacarapps.services.companyapi.exceptions.ResourceNotFoundException;
 import com.blacarapps.services.companyapi.repositories.CompanyRepository;
+import com.blacarapps.services.companyapi.repositories.OwnerRepository;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CompanyController {
+public final class CompanyController {
 
     @Autowired
     private CompanyRepository companies;
+
+    @Autowired
+    private OwnerRepository owners;
 
     @RequestMapping(
         value = "/company",
@@ -76,6 +81,25 @@ public class CompanyController {
                 () -> new ResourceNotFoundException("Company", "id", id)
             );
         this.companies.delete(actual);
+    }
 
+    @RequestMapping(
+        value = "/company/{id}/owner/{ownerid}",
+        method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    public Company addOwner(
+        @PathVariable("id") final Long id,
+        @PathVariable("ownerid") final Long ownerid
+    ) {
+        final Owner owner = this.owners.findById(ownerid).orElseThrow(
+            () -> new ResourceNotFoundException("Owner", "id", ownerid)
+        );
+        final Company actual = this.companies.findById(id)
+            .orElseThrow(
+                () -> new ResourceNotFoundException("Company", "id", id)
+            );
+        actual.getOwners().add(owner);
+        return this.companies.save(actual);
     }
 }
